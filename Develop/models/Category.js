@@ -24,11 +24,11 @@ Category.init(
   },
   {
     // Model options
+    sequelize, // Passes the imported Sequelize connection instance
     freezeTableName: true, // Prevents Sequelize from pluralizing the model name
     timestamps: false, // Disables Sequelize's automatic timestamp fields
     underscored: true, // Enables underscored instead of camel-cased column names
     modelName: 'category', // Sets the model name
-    sequelize, // Passes the imported Sequelize connection instance
   }
 );
 
