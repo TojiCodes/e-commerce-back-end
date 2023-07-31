@@ -1,16 +1,33 @@
 const express = require('express');
 const routes = require('./routes');
-// import sequelize connection
 
-const app = express();
+// Import Sequelize connection
+const sequelize = require('./config/connection');
+
+// Initialize Express application
+const initExpressApp = () => {
+  const app = express();
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
+  app.use(routes);
+
+  return app;
+};
+
 const PORT = process.env.PORT || 3001;
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+const startServer = async (port) => {
+  const app = initExpressApp();
 
-app.use(routes);
+  // Sync Sequelize models to the database, then turn on the server
+  try {
+    await sequelize.sync({ force: false });
+    app.listen(port, () => {
+      console.log(`App listening on port ${port}!`);
+    });
+  } catch (err) {
+    console.error('Unable to sync the database:', err);
+  }
+};
 
-// sync sequelize models to the database, then turn on the server
-app.listen(PORT, () => {
-  console.log(`App listening on port ${PORT}!`);
-});
+startServer(PORT);
